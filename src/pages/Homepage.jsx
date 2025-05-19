@@ -49,7 +49,7 @@ export default function Homepage() {
       return;
       }
 
-      // IMPORTANT: Ensure this URL matches your backend server's address and port
+      // Ensuring this URL matches your backend server's address and port and used dynamic API base
       const response = await fetch(`${BASE_API_URL}/api/classify-image`, {
         method: 'POST',
         body: formData, // fetch will automatically set Content-Type to multipart/form-data

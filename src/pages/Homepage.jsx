@@ -39,8 +39,18 @@ export default function Homepage() {
     formData.append('image', selectedFile); // 'image' must match the Multer field name on backend
 
     try {
+      //Dynamic API base URL from Env. variables
+      const BASE_API_URL = import.meta.env.VITE_API_URL;
+      
+      //check base api working
+       if (!BASE_API_URL) {
+      console.error("VITE_API_URL is not defined. Please check your environment variables.");
+      // Handle this error appropriately, e.g., show an error message to the user
+      return;
+      }
+
       // IMPORTANT: Ensure this URL matches your backend server's address and port
-      const response = await fetch('http://localhost:5000/api/classify-image', {
+      const response = await fetch(`${BASE_API_URL}/api/classify-image`, {
         method: 'POST',
         body: formData, // fetch will automatically set Content-Type to multipart/form-data
       });

@@ -1,6 +1,10 @@
 import React from 'react'
 import styles from './Homepage.module.css'
 import {useState} from 'react'
+import turnersHeader from '../assets/turners-header.png'
+import turnersCarousel from '../assets/carousel.png'
+import turnersMid from '../assets/mid.png'
+import turnersFooter from '../assets/turners-footer.png'
 
 
 export default function Homepage() {
@@ -15,7 +19,7 @@ export default function Homepage() {
     const file = event.target.files[0];
     console.log(event.target.files)
     setSelectedFile(file);
-    setError(null); // Clear previous errors
+    setError(null); // Clear any previous errors
 
     // Create a preview URL for the image
     if (file) {
@@ -62,7 +66,7 @@ export default function Homepage() {
       }
 
       const data = await response.json();
-      setClassificationResults(data.results); // Assuming your backend sends { message, results }
+      setClassificationResults(data.results); // Backend sends { message, results }
       console.log(data);
     } catch (err) {
       console.error('Error during upload or classification:', err);
@@ -76,41 +80,66 @@ export default function Homepage() {
 
 
   return (
-    <div className="App">
-      <h1>Image Classifier</h1>
+    <>
+    <main className={styles.mainPageContainer}>
 
-      <div className="input-section">
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <button onClick={handleUpload} disabled={!selectedFile || loading}>
-          {loading ? 'Classifying...' : 'Classify Image'}
-        </button>
+
+    <header className={styles.header}>
+      <img src={turnersHeader} alt="Turners page Header" />
+    </header>
+
+    <section className={styles.carouselSection}>
+      <img src={turnersCarousel} alt="Turners carousel" />
+    </section>
+
+    <section className={styles.midSection}>
+      <img src={turnersMid} alt="Turners mid section" />
+    </section>
+
+    <div className={styles.app}>
+      <p className={styles.appTitle}>Upload an Image of your Car</p>
+      <p className={styles.appInstructions}>Upload an image of your car, find out the car type, and apply for a quote today.</p>
+
+      <div className={styles.appBox}>
+        <div className={styles.inputSection}>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <button onClick={handleUpload} disabled={!selectedFile || loading}>
+            {loading ? 'Classifying...' : 'Classify Image'}
+          </button>
+        </div>
+
+        {error && <p className={styles.errorMessage}>{error}</p>}
+
+        {previewImage && (
+          <div className={styles.imagePreview}>
+            <p className={styles.appTitle}>Selected Image:</p>
+            <img src={previewImage} alt="Preview" style={{ maxWidth: '300px', maxHeight: '300px', border: '1px solid #ccc' }} />
+          </div>
+        )}
+
+        {classificationResults && (
+          <div className={styles.resultsSection}>
+            <p className={styles.appTitle}>Classification Results:</p>
+            {/* Adapt this rendering based on the actual structure of your Custom Vision API response */}
+            {/* For Classification, it typically has a 'predictions' array. */}
+            {classificationResults.predictions && classificationResults.predictions.length > 0 ? (
+              <div>
+                Your Vehicle appears to be a {classificationResults.predictions[0].tagName}. Go ahead and apply for a quote <a href='https://www.turners.co.nz/Cars/finance-insurance/car-insurance/motor-vehicle-insurance-faqs/'>here</a>
+              </div>
+            ) : (
+              <p>No predictions found or unexpected response format.</p>
+            )}
+          </div>
+        )}
       </div>
 
-      {error && <p className="error-message">{error}</p>}
-
-      {previewImage && (
-        <div className="image-preview">
-          <h2>Selected Image:</h2>
-          <img src={previewImage} alt="Preview" style={{ maxWidth: '300px', maxHeight: '300px', border: '1px solid #ccc' }} />
-        </div>
-      )}
-
-      {classificationResults && (
-        <div className="results-section">
-          <h2>Classification Results:</h2>
-          {/* Adapt this rendering based on the actual structure of your Custom Vision API response */}
-          {/* For Classification, it typically has a 'predictions' array. */}
-          {classificationResults.predictions && classificationResults.predictions.length > 0 ? (
-            <div>
-              Your Vehicle appears to be a : {classificationResults.predictions[0].tagName}
-            </div>
-          ) : (
-            <p>No predictions found or unexpected response format.</p>
-          )}
-          {/* You might also want to display other details from the response for debugging */}
-          {/* <pre>{JSON.stringify(classificationResults, null, 2)}</pre> */}
-        </div>
-      )}
     </div>
+
+    <footer className={styles.footerSection}>
+      <img src={turnersFooter} alt="Turners Footer" />
+    </footer>
+
+    </main>
+    </>
   );
 }

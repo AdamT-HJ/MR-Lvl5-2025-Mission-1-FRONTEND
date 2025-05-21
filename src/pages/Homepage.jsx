@@ -21,7 +21,7 @@ export default function Homepage() {
     setSelectedFile(file);
     setError(null); // Clear any previous errors
 
-    // Create a preview URL for the image
+    // Create preview URL for image selected by user
     if (file) {
       setPreviewImage(URL.createObjectURL(file));
     } else {
@@ -40,7 +40,7 @@ export default function Homepage() {
     setClassificationResults(null);
 
     const formData = new FormData();
-    formData.append('image', selectedFile); // 'image' must match the Multer field name on backend
+    formData.append('image', selectedFile); // 'image' to match Multer field name on backend
 
     try {
       //Dynamic API base URL from Env. variables
@@ -49,18 +49,18 @@ export default function Homepage() {
       //check base api working
        if (!BASE_API_URL) {
       console.error("VITE_API_URL is not defined. Please check your environment variables.");
-      // Handle this error appropriately, e.g., show an error message to the user
+      
       return;
       }
 
       // Ensuring this URL matches your backend server's address and port and used dynamic API base
       const response = await fetch(`${BASE_API_URL}/api/classify-image`, {
         method: 'POST',
-        body: formData, // fetch will automatically set Content-Type to multipart/form-data
+        body: formData, // fetch to automatically set Content-Type to multipart/form-data
       });
 
       if (!response.ok) {
-        // Handle HTTP errors (e.g., 400, 500 from your backend)
+        // Handle HTTP errors 
         const errorData = await response.json();
         throw new Error(errorData.error || 'Something went wrong on the server.');
       }
@@ -120,8 +120,7 @@ export default function Homepage() {
         {classificationResults && (
           <div className={styles.resultsSection}>
             <p className={styles.appTitle}>Classification Results:</p>
-            {/* Adapt this rendering based on the actual structure of your Custom Vision API response */}
-            {/* For Classification, it typically has a 'predictions' array. */}
+          
             {classificationResults.predictions && classificationResults.predictions.length > 0 ? (
               <div>
                 Your Vehicle appears to be a {classificationResults.predictions[0].tagName}. Go ahead and apply for a quote <a href='https://www.turners.co.nz/Cars/finance-insurance/car-insurance/motor-vehicle-insurance-faqs/'>here</a>
